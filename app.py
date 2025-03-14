@@ -1,109 +1,121 @@
-from flask import Flask, request, jsonify, session, render_template
+from flask import Flask, request, jsonify, session, render_template, redirect
+
 from pymongo import MongoClient
-import bcrypt
-from dotenv import load_dotenv
+from flask_session import Session
 import os
-import logging
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Load environment variables
-load_dotenv()
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
-app.secret_key = os.getenv('07ab8e02adb154079d9a7fd6447ecbadade526493e88a7117d7818cb28af88d1')  # Using the existing secret
 
-# Log application paths
-logger.info(f"Current working directory: {os.getcwd()}")
-logger.info(f"Templates directory: {app.template_folder}")
-logger.info(f"Static directory: {app.static_folder}")
+# ✅ MongoDB Configuration
+MONGO_URI = "mongodb+srv://hassanmansuri570:hassan@cluster0.umcss.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+DB_NAME = "Bombay"
+SECRET_KEY = "07ab8e02adb154079d9a7fd6447ecbadade526493e88a7117d7818cb28af88d1"
+SESSION_SECRET = "07ab8e02adb154079d9a7fd6447ecbadade526493e88a7117d7818cb28af88d1"
 
+# ✅ Flask Configurations
+app.secret_key = SECRET_KEY
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_PERMANENT"] = False
+os.makedirs('flask_session', exist_ok=True)  # Ensure directory exists for session files
+Session(app)
+
+# ✅ Connect to MongoDB
 try:
-    # Temporarily disabled MongoDB connection for testing
-    logger.info("MongoDB connection temporarily disabled for testing")
-    users = None
+    client = MongoClient(MONGO_URI)
+    db = client[DB_NAME]  # Connect to database
+    users = db["users"]  # Reference to users collection
+    print("✅ Connected to MongoDB Successfully!")
 except Exception as e:
-    logger.error(f"Failed to connect to MongoDB: {str(e)}")
-    raise
+    print(f"❌ MongoDB Connection Failed: {e}")
+    exit(1)
 
-def hash_password(password):
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
-def check_password(password, hashed):
-    return bcrypt.checkpw(password.encode('utf-8'), hashed)
-
+# ✅ Home Route
 @app.route('/')
 def home():
-    logger.info("Accessing home route")
-    try:
-        if 'user' in session:
-            return render_template('dashboard.html', username=session['user'])
-        return render_template('login.html')
-    except Exception as e:
-        logger.error(f"Error in home route: {str(e)}")
-        return "Error loading page", 500
+    # If user is already logged in, redirect to dashboard
+    if 'user_id' in session:
+        return redirect('/dashboard')
+    return render_template('login.html')
 
+# ✅ Dashboard Route (Added)
+@app.route('/dashboard')
+def dashboard():
+    # Check if user is logged in
+    if 'user_id' not in session:
+        return redirect('/')
+    
+    # Get user data
+    user_id = session.get('user_id')
+    try:
+        user = users.find_one({"_id": ObjectId(user_id)})
+        if not user:
+            session.pop('user_id', None)
+            return redirect('/')
+        
+        # Pass only needed user data (exclude password)
+        user_data = {
+            "username": user.get("username", "User"),
+            "email": user.get("email")
+        }
+        return render_template('dashboard.html', user=user_data)
+    except Exception as e:
+        print(f"Error loading user data: {e}")
+        session.pop('user_id', None)
+        return redirect('/')
+
+# ✅ User Registration
 @app.route('/api/register', methods=['POST'])
 def register():
-    try:
-        data = request.get_json()
-        username = data.get('username')
-        password = data.get('password')
+    data = request.json
+    username = data.get("username")
+    email = data.get('email')
+    password = data.get('password')
 
-        if users and users.find_one({'username': username}):
-            return jsonify({'error': 'Username already exists'}), 400
+    if    not password:
+        return jsonify({'error': 'Missing username or email or password'}), 400
 
-        hashed_password = hash_password(password)
-        if users:
-            users.insert_one({
-                'username': username,
-                'password': hashed_password
-            })
+    if users.find_one({"email": email}):
+        return jsonify({'error': 'Email already registered'}), 400
 
-        session['user'] = username
-        return jsonify({'message': 'Registration successful'})
-    except Exception as e:
-        logger.error(f"Registration error: {str(e)}")
-        return jsonify({'error': 'Registration failed'}), 500
+    if users.find_one({"username": username}):
+       return jsonify({'error': 'Username already taken'}), 400
+    
+    user_data = {
+        "username": username,
+        "email": email, 
+        "password": password
+    }
+    result = users.insert_one(user_data)
 
+    # Set session after successful registration
+    session['user_id'] = str(result.inserted_id)
+    return jsonify({'message': 'User registered successfully', 'user_id': str(result.inserted_id)}), 201
+
+# ✅ User Login
 @app.route('/api/login', methods=['POST'])
 def login():
-    try:
-        data = request.get_json()
-        username = data.get('username')
-        password = data.get('password')
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
 
-        if users:
-            user = users.find_one({'username': username})
-            if user and check_password(password, user['password']):
-                session['user'] = username
-                return jsonify({'message': 'Login successful'})
+    if not email or not password:
+        return jsonify({'error': 'Email and password are required'}), 400
 
+    user = users.find_one({"email": email})
+
+    if not user or user['password'] != password:
         return jsonify({'error': 'Invalid credentials'}), 401
-    except Exception as e:
-        logger.error(f"Login error: {str(e)}")
-        return jsonify({'error': 'Login failed'}), 500
 
+    session['user_id'] = str(user['_id'])
+    return jsonify({'message': 'Login successful'}), 200
+
+# ✅ User Logout
 @app.route('/api/logout', methods=['POST'])
 def logout():
-    session.pop('user', None)
-    return jsonify({'message': 'Logout successful'})
+    session.pop('user_id', None)
+    return jsonify({'message': 'Logout successful'}), 200
 
-@app.route('/test')
-def test():
-    return "Flask server is running!"
-
+# ✅ Run Flask App
 if __name__ == '__main__':
-    try:
-        logger.info("Starting Flask application...")
-        app.run(
-            host='0.0.0.0',
-            port=5000,
-            debug=False,  # Disable debug mode
-            use_reloader=False  # Disable auto-reloader
-        )
-    except Exception as e:
-        logger.error(f"Failed to start Flask application: {str(e)}")
-        raise
+    app.run(debug=True, port=5000)
