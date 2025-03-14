@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Auth System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <nav class="dashboard-nav">
+            <h1>Welcome, {{ username }}!</h1>
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </nav>
+        <div class="dashboard-content">
+            <div class="welcome-card">
+                <h2>Successfully Authenticated</h2>
+                <p>You are now logged into your secure dashboard.</p>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
