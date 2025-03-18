@@ -1,24 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
-    const tabBtns = document.querySelectorAll('.tab-btn');
     
-    // Tab switching
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            if (btn.dataset.tab === 'login') {
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-            } else {
-                loginForm.classList.add('hidden');
-                registerForm.classList.remove('hidden');
-            }
-        });
-    });
-
+    // Check if URL has a parameter to show registration form
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('register') === 'true') {
+        document.getElementById('flip').checked = true;
+    }
+    
     // Login form submission
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -39,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             
             if (response.ok) {
-                window.location.href = '/';
+                window.location.href = '/dashboard';
             } else {
                 errorElement.textContent = data.error;
             }
@@ -61,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                     username: registerForm.username.value,
+                    email: registerForm.email.value,
                     password: registerForm.password.value
                 })
             });
@@ -68,9 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             
             if (response.ok) {
-                window.location.href = '/';
+                window.location.href = '/dashboard';
             } else {
-                errorElement.textContent = data.error;
+                errorElement.textContent = data.error || 'Registration failed';
             }
         } catch (error) {
             errorElement.textContent = 'An error occurred. Please try again.';
