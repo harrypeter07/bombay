@@ -254,3 +254,54 @@ body {
 		font-size: 16px;
 	}
 }
+
+.layer-item {
+	display: flex;
+	align-items: center;
+	padding: 8px;
+	margin: 4px 0;
+	background: #f5f5f5;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.layer-item:hover {
+	background: #e0e0e0;
+}
+
+.layer-item.locked {
+	background: #ffe0e0;
+}
+
+.layer-item.hidden {
+	opacity: 0.5;
+}
+
+.layer-item img {
+	width: 24px;
+	height: 24px;
+	margin-right: 8px;
+	border-radius: 2px;
+}
+
+.layer-item span {
+	flex-grow: 1;
+}
+
+.layer-controls {
+	display: flex;
+	gap: 4px;
+}
+
+.layer-controls button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 4px;
+	border-radius: 4px;
+}
+
+.layer-controls button:hover {
+	background: rgba(0, 0, 0, 0.1);
+}
