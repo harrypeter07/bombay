@@ -7,13 +7,14 @@
 }
 
 :root {
-	--primary-color: #00879e;
-	--secondary-color: #003092;
-	--background-color: #fff2db;
-	--accent-color: #ffab5b;
+	--primary-color: #3f7d58;
+	--secondary-color: #ec5228;
+	--background-color: #efefef;
+	--accent-color: #ef9651;
 	--padding-large: 2rem;
 	--padding-medium: 1.5rem;
 	--padding-small: 1rem;
+	--padding-xs: 0.5rem;
 	--border-radius: 10px;
 }
 body {
@@ -21,7 +22,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: #00879e;
+	background: var(--primary-color);
 	padding: 30px;
 }
 .container {
@@ -82,7 +83,7 @@ body {
 	height: 100%;
 	width: 100%;
 	opacity: 0.5;
-	background: #00879e;
+	background: var(--accent-color);
 }
 .cover .text .text-1,
 .cover .text .text-2 {
@@ -125,7 +126,7 @@ body {
 	bottom: 0;
 	height: 3px;
 	width: 25px;
-	background: #00879e;
+	background: var(--accent-color);
 }
 .forms .signup-form .title:before {
 	width: 20px;
@@ -152,12 +153,12 @@ body {
 	transition: all 0.3s ease;
 }
 .form-content .input-box input:focus {
-	border-color: #00879e;
+	border-color: var(--accent-color);
 }
 .form-content .input-box i {
 	position: absolute;
 	left: 10px;
-	color: #00879e;
+	color: var(--primary-color);
 	font-size: 17px;
 }
 .forms .form-content .text {
@@ -167,7 +168,7 @@ body {
 }
 .forms .form-content .text a {
 	text-decoration: none;
-	color: #00879e;
+	color: var(--primary-color);
 }
 .forms .form-content .text a:hover {
 	text-decoration: underline;
@@ -187,10 +188,10 @@ body {
 	font-weight: 500;
 }
 .forms .form-content .button input:hover {
-	background: #00879e;
+	background: var(--secondary-color);
 }
 .forms .form-content label {
-	color: #00879e;
+	color: var(--primary-color);
 	cursor: pointer;
 }
 .forms .form-content label:hover {
@@ -212,7 +213,16 @@ body {
 
 @media screen and (max-width: 768px) {
 	.container {
-		padding: var(--padding-medium);
+		padding: var(--padding-small);
+	}
+
+	.forms .form-content .title {
+		font-size: 24px;
+	}
+
+	.forms .form-content .button input {
+		padding: var(--padding-xs);
+		font-size: 16px;
 	}
 
 	.form-content .login-form,
@@ -239,19 +249,21 @@ body {
 
 @media screen and (max-width: 480px) {
 	.container {
-		padding: var(--padding-small);
+		padding: var(--padding-xs);
 	}
 
 	.forms .form-content .title {
-		font-size: 24px;
+		font-size: 20px;
 	}
 
 	.form-content .input-box input {
-		font-size: 14px;
+		font-size: 13px;
+		padding: 0 var(--padding-xs);
 	}
 
 	.forms .form-content .button input {
-		font-size: 16px;
+		font-size: 14px;
+		padding: var(--padding-xs);
 	}
 }
 

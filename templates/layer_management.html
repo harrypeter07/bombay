@@ -1,395 +1,399 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Layer Management Panel</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f2f5;
-      margin: 0;
-      padding: 20px;
-    }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Layer Management Panel</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #f0f2f5;
+				margin: 0;
+				padding: 20px;
+			}
 
-    .panel {
-      background-color: #ffffff;
-      border: 1px solid #d1d9e6;
-      border-radius: 8px;
-      padding: 15px;
-      width: 300px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
+			.panel {
+				background-color: #ffffff;
+				border: 1px solid #d1d9e6;
+				border-radius: 8px;
+				padding: 15px;
+				width: 300px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			}
 
-    .panel-title {
-      font-weight: 600;
-      margin: 0 0 15px 0;
-      color: #2c3e50;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+			.panel-title {
+				font-weight: 600;
+				margin: 0 0 15px 0;
+				color: #2c3e50;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
 
-    .panel-title i {
-      cursor: pointer;
-      color: #3498db;
-      transition: transform 0.3s ease;
-    }
+			.panel-title i {
+				cursor: pointer;
+				color: var(--accent-color);
+				transition: transform 0.3s ease;
+			}
 
-    .panel-content {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+			.panel-content {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+			}
 
-    .tool-btn {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      padding: 10px 12px;
-      background-color: #3498db;
-      color: #ffffff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background-color 0.2s ease;
-    }
+			.tool-btn {
+				display: flex;
+				align-items: center;
+				width: 100%;
+				padding: 10px 12px;
+				background-color: var(--accent-color);
+				color: #ffffff;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				font-weight: 500;
+				transition: background-color 0.2s ease;
+			}
 
-    .tool-btn:hover {
-      background-color: #2980b9;
-    }
+			.tool-btn:hover {
+				background-color: var(--accent-hover);
+			}
 
-    .tool-btn i {
-      margin-right: 8px;
-    }
+			.tool-btn i {
+				margin-right: 8px;
+			}
 
-    .tool-btn.secondary {
-      background-color: #ecf0f1;
-      color: #2c3e50;
-      border: 1px solid #d1d9e6;
-    }
+			.tool-btn.secondary {
+				background-color: #ecf0f1;
+				color: #2c3e50;
+				border: 1px solid #d1d9e6;
+			}
 
-    .tool-btn.secondary:hover {
-      background-color: #dfe6e9;
-    }
+			.tool-btn.secondary:hover {
+				background-color: #dfe6e9;
+			}
 
-    .tool-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-    }
+			.tool-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 8px;
+			}
 
-    .layer-list {
-      margin-top: 15px;
-      padding: 10px;
-      border: 1px solid #d1d9e6;
-      border-radius: 4px;
-      background-color: #f9fbfc;
-      min-height: 100px;
-      max-height: 200px;
-      overflow-y: auto;
-      position: relative;
-    }
+			.layer-list {
+				margin-top: 15px;
+				padding: 10px;
+				border: 1px solid #d1d9e6;
+				border-radius: 4px;
+				background-color: #f9fbfc;
+				min-height: 100px;
+				max-height: 200px;
+				overflow-y: auto;
+				position: relative;
+			}
 
-    .layer-item {
-      display: flex;
-      align-items: center;
-      padding: 5px;
-      margin-bottom: 5px;
-      background-color: #ffffff;
-      border: 1px solid #b3c6d4;
-      border-radius: 4px;
-      cursor: move;
-      user-select: none;
-      transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
-      position: relative; /* For smooth repositioning */
-    }
+			.layer-item {
+				display: flex;
+				align-items: center;
+				padding: 5px;
+				margin-bottom: 5px;
+				background-color: #ffffff;
+				border: 1px solid #b3c6d4;
+				border-radius: 4px;
+				cursor: move;
+				user-select: none;
+				transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
+				position: relative; /* For smooth repositioning */
+			}
 
-    .layer-item img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-      border-radius: 4px;
-      background-color: #e8eef2;
-    }
+			.layer-item img {
+				width: 40px;
+				height: 40px;
+				margin-right: 10px;
+				border-radius: 4px;
+				background-color: #e8eef2;
+			}
 
-    .layer-item span {
-      font-size: 12px;
-      color: #2c3e50;
-    }
+			.layer-item span {
+				font-size: 12px;
+				color: #2c3e50;
+			}
 
-    .layer-item.dragging {
-      position: absolute;
-      z-index: 1000;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-      opacity: 0.9;
-    }
+			.layer-item.dragging {
+				position: absolute;
+				z-index: 1000;
+				box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+				opacity: 0.9;
+			}
 
-    .layer-count {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #7f8c8d;
-    }
+			.layer-count {
+				margin-top: 10px;
+				font-size: 14px;
+				color: #7f8c8d;
+			}
 
-    .layer-list.drag-over {
-      border-color: #3498db;
-      background-color: #eef5fb;
-    }
+			.layer-list.drag-over {
+				border-color: #3498db;
+				background-color: #eef5fb;
+			}
 
-    .collapsed .panel-content {
-      display: none;
-    }
+			.collapsed .panel-content {
+				display: none;
+			}
 
-    .collapsed .panel-title i {
-      transform: rotate(-90deg);
-    }
-  </style>
-</head>
-<body>
-  <div class="panel">
-    <h3 class="panel-title">
-      Layer Management <i class="fas fa-chevron-down"></i>
-    </h3>
-    <div class="panel-content">
-      <div class="layer-controls">
-        <button class="tool-btn" onclick="addLayer()">
-          <i class="fas fa-plus"></i> Add Layer
-        </button>
-        <button class="tool-btn secondary" onclick="removeLayer()">
-          <i class="fas fa-minus"></i> Remove Layer
-        </button>
-        <button class="tool-btn secondary" onclick="renameLayer()">
-          <i class="fas fa-pen"></i> Rename Layer
-        </button>
-        <div class="tool-grid">
-          <button class="tool-btn secondary" onclick="lockLayer()">
-            <i class="fas fa-lock"></i> Lock
-          </button>
-          <button class="tool-btn secondary" onclick="unlockLayer()">
-            <i class="fas fa-unlock"></i> Unlock
-          </button>
-        </div>
-      </div>
-      <div id="layer-list" class="layer-list">
-        <!-- Layers will be dynamically added here -->
-      </div>
-      <div class="layer-count">
-        Total Layers: <span id="layer-count">0</span>
-      </div>
-    </div>
-  </div>
+			.collapsed .panel-title i {
+				transform: rotate(-90deg);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="panel">
+			<h3 class="panel-title">
+				Layer Management <i class="fas fa-chevron-down"></i>
+			</h3>
+			<div class="panel-content">
+				<div class="layer-controls">
+					<button class="tool-btn" onclick="addLayer()">
+						<i class="fas fa-plus"></i> Add Layer
+					</button>
+					<button class="tool-btn secondary" onclick="removeLayer()">
+						<i class="fas fa-minus"></i> Remove Layer
+					</button>
+					<button class="tool-btn secondary" onclick="renameLayer()">
+						<i class="fas fa-pen"></i> Rename Layer
+					</button>
+					<div class="tool-grid">
+						<button class="tool-btn secondary" onclick="lockLayer()">
+							<i class="fas fa-lock"></i> Lock
+						</button>
+						<button class="tool-btn secondary" onclick="unlockLayer()">
+							<i class="fas fa-unlock"></i> Unlock
+						</button>
+					</div>
+				</div>
+				<div id="layer-list" class="layer-list">
+					<!-- Layers will be dynamically added here -->
+				</div>
+				<div class="layer-count">
+					Total Layers: <span id="layer-count">0</span>
+				</div>
+			</div>
+		</div>
 
-  <script>
-    let layers = [];
-    let layerCount = 0;
-    let currentLayer = null;
-    let lockedLayers = [];
-    let draggedItem = null;
-    let offsetX, offsetY;
+		<script>
+			let layers = [];
+			let layerCount = 0;
+			let currentLayer = null;
+			let lockedLayers = [];
+			let draggedItem = null;
+			let offsetX, offsetY;
 
-    // Initialize with one layer
-    document.addEventListener('DOMContentLoaded', () => {
-      addLayer();
-    });
+			// Initialize with one layer
+			document.addEventListener("DOMContentLoaded", () => {
+				addLayer();
+			});
 
-    // Helper to show popup messages
-    function showPopup(message) {
-      const popup = document.createElement('div');
-      popup.textContent = message;
-      popup.style.position = 'fixed';
-      popup.style.top = '20px';
-      popup.style.left = '50%';
-      popup.style.transform = 'translateX(-50%)';
-      popup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-      popup.style.color = '#ffffff';
-      popup.style.padding = '10px 20px';
-      popup.style.borderRadius = '5px';
-      popup.style.zIndex = '2000';
-      document.body.appendChild(popup);
-      setTimeout(() => {
-        document.body.removeChild(popup);
-      }, 2000);
-    }
+			// Helper to show popup messages
+			function showPopup(message) {
+				const popup = document.createElement("div");
+				popup.textContent = message;
+				popup.style.position = "fixed";
+				popup.style.top = "20px";
+				popup.style.left = "50%";
+				popup.style.transform = "translateX(-50%)";
+				popup.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+				popup.style.color = "#ffffff";
+				popup.style.padding = "10px 20px";
+				popup.style.borderRadius = "5px";
+				popup.style.zIndex = "2000";
+				document.body.appendChild(popup);
+				setTimeout(() => {
+					document.body.removeChild(popup);
+				}, 2000);
+			}
 
-    // Update the layer list UI
-    function updateLayerList() {
-      const layerList = document.getElementById('layer-list');
-      const layerCountSpan = document.getElementById('layer-count');
-      layerList.innerHTML = '';
+			// Update the layer list UI
+			function updateLayerList() {
+				const layerList = document.getElementById("layer-list");
+				const layerCountSpan = document.getElementById("layer-count");
+				layerList.innerHTML = "";
 
-      layers.forEach((layer, index) => {
-        const layerItem = document.createElement('div');
-        layerItem.className = 'layer-item';
-        layerItem.dataset.index = index;
+				layers.forEach((layer, index) => {
+					const layerItem = document.createElement("div");
+					layerItem.className = "layer-item";
+					layerItem.dataset.index = index;
 
-        const img = document.createElement('img');
-        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABYSURBVFhH7dNBCgAgDADBtf//s7vswE4ME8EIeN2VZQYG8dOQJ7tG3iV2EjuJnWROcie5k9xJ7iR3kjuJneROcie5k9xJ7iR3kjuJneROcie5k9xJ7iR3kjvJneROcietlF7iFAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyNC0xMC0yOVQwMjo1Mzo1NSswMDowMNWdKRsAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjQtMTAtMjlUMDI6NTM6NTUrMDA6MDDpfi5aAAAAAElFTkSuQmCC';
-        img.alt = layer.name;
+					const img = document.createElement("img");
+					img.src =
+						"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABYSURBVFhH7dNBCgAgDADBtf//s7vswE4ME8EIeN2VZQYG8dOQJ7tG3iV2EjuJnWROcie5k9xJ7iR3kjuJneROcie5k9xJ7iR3kjuJneROcie5k9xJ7iR3kjvJneROcietlF7iFAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyNC0xMC0yOVQwMjo1Mzo1NSswMDowMNWdKRsAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjQtMTAtMjlUMDI6NTM6NTUrMDA6MDDpfi5aAAAAAElFTkSuQmCC";
+					img.alt = layer.name;
 
-        const span = document.createElement('span');
-        span.textContent = layer.name;
+					const span = document.createElement("span");
+					span.textContent = layer.name;
 
-        layerItem.appendChild(img);
-        layerItem.appendChild(span);
-        layerList.appendChild(layerItem);
+					layerItem.appendChild(img);
+					layerItem.appendChild(span);
+					layerList.appendChild(layerItem);
 
-        // Mouse down for dragging with cursor
-        layerItem.addEventListener('mousedown', (e) => {
-          if (e.button === 0) {
-            draggedItem = layerItem;
-            const rect = layerItem.getBoundingClientRect();
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-            layerItem.classList.add('dragging');
-            document.body.appendChild(layerItem); // Move to body for absolute positioning
-            moveWithCursor(e);
-          }
-        });
+					// Mouse down for dragging with cursor
+					layerItem.addEventListener("mousedown", (e) => {
+						if (e.button === 0) {
+							draggedItem = layerItem;
+							const rect = layerItem.getBoundingClientRect();
+							offsetX = e.clientX - rect.left;
+							offsetY = e.clientY - rect.top;
+							layerItem.classList.add("dragging");
+							document.body.appendChild(layerItem); // Move to body for absolute positioning
+							moveWithCursor(e);
+						}
+					});
 
-        // Click to select layer (without dragging)
-        layerItem.addEventListener('click', (e) => {
-          if (!draggedItem) {
-            currentLayer = index;
-            showPopup(`Selected ${layers[currentLayer].name}`);
-          }
-        });
-      });
+					// Click to select layer (without dragging)
+					layerItem.addEventListener("click", (e) => {
+						if (!draggedItem) {
+							currentLayer = index;
+							showPopup(`Selected ${layers[currentLayer].name}`);
+						}
+					});
+				});
 
-      layerCountSpan.textContent = layers.length;
-    }
+				layerCountSpan.textContent = layers.length;
+			}
 
-    // Move the dragged item with the cursor and push others
-    function moveWithCursor(e) {
-      if (draggedItem) {
-        draggedItem.style.left = `${e.clientX - offsetX}px`;
-        draggedItem.style.top = `${e.clientY - offsetY}px`;
+			// Move the dragged item with the cursor and push others
+			function moveWithCursor(e) {
+				if (draggedItem) {
+					draggedItem.style.left = `${e.clientX - offsetX}px`;
+					draggedItem.style.top = `${e.clientY - offsetY}px`;
 
-        const layerList = document.getElementById('layer-list');
-        const items = Array.from(layerList.children);
-        const draggedIndex = parseInt(draggedItem.dataset.index);
-        const draggedHeight = draggedItem.offsetHeight + 5; // Include margin
+					const layerList = document.getElementById("layer-list");
+					const items = Array.from(layerList.children);
+					const draggedIndex = parseInt(draggedItem.dataset.index);
+					const draggedHeight = draggedItem.offsetHeight + 5; // Include margin
 
-        items.forEach((item, index) => {
-          if (item !== draggedItem) {
-            const itemRect = item.getBoundingClientRect();
-            const draggedRect = draggedItem.getBoundingClientRect();
-            const itemCenter = itemRect.top + itemRect.height / 2;
-            const draggedCenter = draggedRect.top + draggedRect.height / 2;
+					items.forEach((item, index) => {
+						if (item !== draggedItem) {
+							const itemRect = item.getBoundingClientRect();
+							const draggedRect = draggedItem.getBoundingClientRect();
+							const itemCenter = itemRect.top + itemRect.height / 2;
+							const draggedCenter = draggedRect.top + draggedRect.height / 2;
 
-            // Determine if the dragged item is above or below this item
-            if (draggedCenter < itemCenter && index > draggedIndex) {
-              item.style.transform = `translateY(${draggedHeight}px)`; // Push down
-            } else if (draggedCenter > itemCenter && index < draggedIndex) {
-              item.style.transform = `translateY(-${draggedHeight}px)`; // Push up
-            } else {
-              item.style.transform = 'translateY(0)'; // Reset
-            }
-          }
-        });
-      }
-    }
+							// Determine if the dragged item is above or below this item
+							if (draggedCenter < itemCenter && index > draggedIndex) {
+								item.style.transform = `translateY(${draggedHeight}px)`; // Push down
+							} else if (draggedCenter > itemCenter && index < draggedIndex) {
+								item.style.transform = `translateY(-${draggedHeight}px)`; // Push up
+							} else {
+								item.style.transform = "translateY(0)"; // Reset
+							}
+						}
+					});
+				}
+			}
 
-    // Handle dragging
-    document.addEventListener('mousemove', moveWithCursor);
+			// Handle dragging
+			document.addEventListener("mousemove", moveWithCursor);
 
-    document.addEventListener('mouseup', (e) => {
-      if (draggedItem) {
-        const fromIndex = parseInt(draggedItem.dataset.index);
-        const layerList = document.getElementById('layer-list');
-        const items = Array.from(layerList.children);
-        let toIndex = layers.length - 1;
+			document.addEventListener("mouseup", (e) => {
+				if (draggedItem) {
+					const fromIndex = parseInt(draggedItem.dataset.index);
+					const layerList = document.getElementById("layer-list");
+					const items = Array.from(layerList.children);
+					let toIndex = layers.length - 1;
 
-        // Determine drop position based on cursor Y position
-        for (let i = 0; i < items.length; i++) {
-          const itemRect = items[i].getBoundingClientRect();
-          if (e.clientY < itemRect.top + itemRect.height / 2) {
-            toIndex = i;
-            break;
-          }
-        }
+					// Determine drop position based on cursor Y position
+					for (let i = 0; i < items.length; i++) {
+						const itemRect = items[i].getBoundingClientRect();
+						if (e.clientY < itemRect.top + itemRect.height / 2) {
+							toIndex = i;
+							break;
+						}
+					}
 
-        draggedItem.classList.remove('dragging');
-        layerList.appendChild(draggedItem); // Move back to layer list
-        draggedItem.style.position = '';
-        draggedItem.style.left = '';
-        draggedItem.style.top = '';
+					draggedItem.classList.remove("dragging");
+					layerList.appendChild(draggedItem); // Move back to layer list
+					draggedItem.style.position = "";
+					draggedItem.style.left = "";
+					draggedItem.style.top = "";
 
-        // Reset transforms of all items
-        items.forEach(item => {
-          item.style.transform = 'translateY(0)';
-        });
+					// Reset transforms of all items
+					items.forEach((item) => {
+						item.style.transform = "translateY(0)";
+					});
 
-        if (fromIndex !== toIndex) {
-          reorderLayers(fromIndex, toIndex);
-        }
+					if (fromIndex !== toIndex) {
+						reorderLayers(fromIndex, toIndex);
+					}
 
-        draggedItem = null;
-      }
-    });
+					draggedItem = null;
+				}
+			});
 
-    // Reorder layers
-    function reorderLayers(fromIndex, toIndex) {
-      const [movedLayer] = layers.splice(fromIndex, 1);
-      layers.splice(toIndex, 0, movedLayer);
-      if (currentLayer === fromIndex) {
-        currentLayer = toIndex;
-      } else if (currentLayer === toIndex && fromIndex < toIndex) {
-        currentLayer--;
-      } else if (currentLayer === toIndex && fromIndex > toIndex) {
-        currentLayer++;
-      }
-      updateLayerList();
-      showPopup(`Moved ${movedLayer.name} to position ${toIndex + 1}`);
-    }
+			// Reorder layers
+			function reorderLayers(fromIndex, toIndex) {
+				const [movedLayer] = layers.splice(fromIndex, 1);
+				layers.splice(toIndex, 0, movedLayer);
+				if (currentLayer === fromIndex) {
+					currentLayer = toIndex;
+				} else if (currentLayer === toIndex && fromIndex < toIndex) {
+					currentLayer--;
+				} else if (currentLayer === toIndex && fromIndex > toIndex) {
+					currentLayer++;
+				}
+				updateLayerList();
+				showPopup(`Moved ${movedLayer.name} to position ${toIndex + 1}`);
+			}
 
-    // Layer Management Functions
-    function addLayer() {
-      layerCount++;
-      const layerName = `Layer ${layerCount}`;
-      layers.push({ name: layerName, objects: [] });
-      currentLayer = layers.length - 1;
-      updateLayerList();
-      showPopup(`${layerName} added`);
-    }
+			// Layer Management Functions
+			function addLayer() {
+				layerCount++;
+				const layerName = `Layer ${layerCount}`;
+				layers.push({ name: layerName, objects: [] });
+				currentLayer = layers.length - 1;
+				updateLayerList();
+				showPopup(`${layerName} added`);
+			}
 
-    function removeLayer() {
-      if (currentLayer !== null && layers[currentLayer]) {
-        const removedLayer = layers.splice(currentLayer, 1)[0];
-        currentLayer = layers.length > 0 ? layers.length - 1 : null;
-        updateLayerList();
-        showPopup(`${removedLayer.name} removed`);
-      }
-    }
+			function removeLayer() {
+				if (currentLayer !== null && layers[currentLayer]) {
+					const removedLayer = layers.splice(currentLayer, 1)[0];
+					currentLayer = layers.length > 0 ? layers.length - 1 : null;
+					updateLayerList();
+					showPopup(`${removedLayer.name} removed`);
+				}
+			}
 
-    function renameLayer() {
-      if (currentLayer !== null && layers[currentLayer]) {
-        const newName = prompt('Enter new layer name:', layers[currentLayer].name);
-        if (newName) {
-          layers[currentLayer].name = newName;
-          updateLayerList();
-          showPopup(`Layer renamed to ${newName}`);
-        }
-      }
-    }
+			function renameLayer() {
+				if (currentLayer !== null && layers[currentLayer]) {
+					const newName = prompt(
+						"Enter new layer name:",
+						layers[currentLayer].name
+					);
+					if (newName) {
+						layers[currentLayer].name = newName;
+						updateLayerList();
+						showPopup(`Layer renamed to ${newName}`);
+					}
+				}
+			}
 
-    function lockLayer() {
-      if (currentLayer !== null && layers[currentLayer]) {
-        lockedLayers.push(layers[currentLayer].name);
-        showPopup(`${layers[currentLayer].name} locked`);
-      }
-    }
+			function lockLayer() {
+				if (currentLayer !== null && layers[currentLayer]) {
+					lockedLayers.push(layers[currentLayer].name);
+					showPopup(`${layers[currentLayer].name} locked`);
+				}
+			}
 
-    function unlockLayer() {
-      if (currentLayer !== null && layers[currentLayer]) {
-        const index = lockedLayers.indexOf(layers[currentLayer].name);
-        if (index !== -1) {
-          lockedLayers.splice(index, 1);
-          showPopup(`${layers[currentLayer].name} unlocked`);
-        }
-      }
-    }
-  </script>
-</body>
+			function unlockLayer() {
+				if (currentLayer !== null && layers[currentLayer]) {
+					const index = lockedLayers.indexOf(layers[currentLayer].name);
+					if (index !== -1) {
+						lockedLayers.splice(index, 1);
+						showPopup(`${layers[currentLayer].name} unlocked`);
+					}
+				}
+			}
+		</script>
+	</body>
 </html>
