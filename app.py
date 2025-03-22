@@ -182,6 +182,23 @@ def create_segmentation():
         logger.error(f"Error in create_segmentation route: {e}")
         return "Error loading page", 500
 
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = users.find_one({'email': email})
+        if user:
+            # TODO: Implement password reset email functionality
+            return "Password reset link has been sent to your email"
+        return "Email not found", 404
+    return render_template('forgot_password.html')
+
+@app.route('/help-faq')
+def help_faq():
+    if 'user' not in session:
+        return redirect(url_for('home'))
+    return render_template('help_faq.html', username=session['user'])
+
 @app.route('/test')
 def test():
     return "Flask server is running!"

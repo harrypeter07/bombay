@@ -1,224 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create Segmentation</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='create_segmentation.css') }}" />
-</head>
-<body>
-  <div class="editor-header">
-    <h1>Advanced Image Editor</h1>
-    
-    <div class="header-content">
-      <div class="user-info">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Create Segmentation</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='create_segmentation.css') }}"
+		/>
+	</head>
+	<body>
+		<div class="editor-header">
+			<h1>Advanced Image Editor</h1>
+
+			<div class="header-content">
+				<div class="user-info">
+          <div class="user-credits" id="userCredits">
+            <i class="fas fa-coins"></i>
+						<span id="creditsAmount">750</span> credits
+					</div>
+				</div>
+        
+        <div class="nav-links">
+          <a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a>
+					<a href="{{ url_for('create_segmentation') }}"
+          ><i class="fas fa-layer-group"></i> Create Segmentation</a
+					>
+					<a href="#"><i class="fas fa-code"></i> View JSON</a>
+				</div>
+        <div class="theme-toggle" onclick="toggleTheme()">
+          <i class="fas fa-moon"></i>
+          <span>Dark Mode</span>
+        </div>
         <div class="user-avatar" id="userInitials">JS</div>
         <div class="user-details">
           <div class="user-name" id="userName">{{username}}</div>
           <div class="user-welcome">Welcome back!</div>
         </div>
-        <div class="user-credits" id="userCredits">
-          <i class="fas fa-coins"></i> <span id="creditsAmount">750</span> credits
-        </div>
-      </div>
-      
-      <div class="theme-toggle" onclick="toggleTheme()">
-        <i class="fas fa-moon"></i>
-        <span>Dark Mode</span>
-      </div>
-    </div>
-  </div>
 
-  <div class="container">
-    
-    
-    <!-- Main content with larger canvas -->
-    <div class="main">
-      <div class="canvas-container">
-        <canvas id="canvas" width="800" height="600"></canvas>
-      </div>
+			</div>
+		</div>
 
-      <div class="panel ai-generation-section">
-        <h3 class="panel-title">AI Image Generation <i class="fas fa-chevron-down"></i></h3>
-        <div class="panel-content">
-          <form id="imageForm">
-            <div class="input-container">
-              <textarea id="imagePrompt" placeholder="Enter your prompt here" rows="4" name="prompt"></textarea>
-            </div>
-            
-            <div class="buttons-container">
-              <button class="ai-btn" type="submit">
-                <i class="fas fa-magic"></i> Generate
-              </button>
-              <button class="ai-btn secondary" type="button">
-                <i class="fas fa-sliders-h"></i> Options
-              </button>
-              <button class="ai-btn outline" type="button">
-                <i class="fas fa-redo"></i> Reset
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+		<div class="container">
+			<!-- Main content with larger canvas -->
+			<div class="main">
+				<div class="canvas-container">
+					<canvas id="canvas" width="800" height="600"></canvas>
+				</div>
 
-      <button class="tool-btn" onclick="generateJSON()">
-        <i class="fas fa-code"></i> Generate JSON
-      </button>
-      <div id="jsonContainer" class="mt-3"></div>
-    </div>
+				<div class="panel ai-generation-section">
+					<h3 class="panel-title">
+						AI Image Generation <i class="fas fa-chevron-down"></i>
+					</h3>
+					<div class="panel-content">
+						<form id="imageForm">
+							<div class="input-container">
+								<textarea
+									id="imagePrompt"
+									placeholder="Enter your prompt here"
+									rows="4"
+									name="prompt"
+								></textarea>
+							</div>
 
-    <div class="sidebar">
-      <div class="panel">
-        <h3 class="panel-title">
-          Basic Tools <i class="fas fa-chevron-down"></i>
-        </h3>
-        <div class="panel-content">
-          <div class="tool-grid">
-            <button class="tool-btn" onclick="clearCanvas()">
-              <i class="fas fa-trash"></i> Clear
-            </button>
-            <button class="tool-btn" onclick="addRectangle()">
-              <i class="fas fa-square"></i> Rectangle
-            </button>
-            <button class="tool-btn" onclick="addCircle()">
-              <i class="fas fa-circle"></i> Circle
-            </button>
-            <button class="tool-btn" onclick="addLine()">
-              <i class="fas fa-slash"></i> Line
-            </button>
-          </div>
-          <button class="tool-btn secondary" onclick="removeSelectedObject()">
-            <i class="fas fa-times"></i> Remove Selected
-          </button>
-        </div>
-      </div>
+							<div class="buttons-container">
+								<button class="ai-btn" type="submit">
+									<i class="fas fa-magic"></i> Generate
+								</button>
+								<button class="ai-btn secondary" type="button">
+									<i class="fas fa-sliders-h"></i> Options
+								</button>
+								<button class="ai-btn outline" type="button">
+									<i class="fas fa-redo"></i> Reset
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
 
-      <div class="panel">
-        <h3 class="panel-title">
-          Layer Management <i class="fas fa-chevron-down"></i>
-        </h3>
-        <div class="panel-content">
-          <div class="layer-controls">
-            <button class="tool-btn" onclick="addLayer()">
-              <i class="fas fa-plus"></i> Add Layer
-            </button>
-            <button class="tool-btn secondary" onclick="removeLayer()">
-              <i class="fas fa-minus"></i> Remove Layer
-            </button>
-            <button class="tool-btn secondary" onclick="renameLayer()">
-              <i class="fas fa-pen"></i> Rename Layer
-            </button>
-            <div class="tool-grid">
-              <!-- This empty div was in the original code -->
-            </div>
-          </div>
-          <div id="layer-list" class="layer-list">
-            <!-- Layers will be dynamically added here -->
-          </div>
-          <div class="layer-count">
-            Total Layers: <span id="layer-count">0</span>
-          </div>
-        </div>
-      </div>
+				<button class="tool-btn" onclick="generateJSON()">
+					<i class="fas fa-code"></i> Generate JSON
+				</button>
+				<div id="jsonContainer" class="mt-3"></div>
+			</div>
 
-      <div class="panel">
-        <h3 class="panel-title">
-          Image Tools <i class="fas fa-chevron-down"></i>
-        </h3>
-        <div class="panel-content">
-          <div class="control-group">
-            <input type="file" id="imageUpload" accept="image/*" class="form-control" />
-            <button class="tool-btn" onclick="addImage()">
-              <i class="fas fa-image"></i> Add Image
-            </button>
-          </div>
-          <div class="control-group">
-            <input type="file" id="segmentImageUpload" accept="image/*" class="form-control" />
-            <button class="tool-btn" onclick="sendImageForSegmentation()">
-              <i class="fas fa-cut"></i> Segment Image
-            </button>
-          </div>
-        </div>
-      </div>
+			<div class="sidebar">
+				<div class="panel">
+					<h3 class="panel-title">
+						Basic Tools <i class="fas fa-chevron-down"></i>
+					</h3>
+					<div class="panel-content">
+						<div class="tool-grid">
+							<button class="tool-btn" onclick="clearCanvas()">
+								<i class="fas fa-trash"></i> Clear
+							</button>
+							<button class="tool-btn" onclick="addRectangle()">
+								<i class="fas fa-square"></i> Rectangle
+							</button>
+							<button class="tool-btn" onclick="addCircle()">
+								<i class="fas fa-circle"></i> Circle
+							</button>
+							<button class="tool-btn" onclick="addLine()">
+								<i class="fas fa-slash"></i> Line
+							</button>
+						</div>
+						<button class="tool-btn secondary" onclick="removeSelectedObject()">
+							<i class="fas fa-times"></i> Remove Selected
+						</button>
+					</div>
+				</div>
 
-      <!-- Moved relationship panel to sidebar -->
-      <div class="panel relationship-panel">
-        <h3 class="panel-title">Define Relationships <i class="fas fa-chevron-down"></i></h3>
-        <div class="panel-content relationship-controls">
-          <select id="object1" class="form-select">
-            <option value="">Select Object 1</option>
-          </select>
-          <select id="relationshipType" class="form-select">
-            <option value="connected">Connected to</option>
-            <option value="contains">Contains</option>
-            <option value="partOf">Part of</option>
-          </select>
-          <select id="object2" class="form-select">
-            <option value="">Select Object 2</option>
-          </select>
-          <button class="tool-btn" onclick="addRelationship()">
-            <i class="fas fa-link"></i> Add Relationship
-          </button>
-        </div>
-      </div>
+				<div class="panel">
+					<h3 class="panel-title">
+						Layer Management <i class="fas fa-chevron-down"></i>
+					</h3>
+					<div class="panel-content">
+						<div class="layer-controls">
+							<button class="tool-btn" onclick="addLayer()">
+								<i class="fas fa-plus"></i> Add Layer
+							</button>
+							<button class="tool-btn secondary" onclick="removeLayer()">
+								<i class="fas fa-minus"></i> Remove Layer
+							</button>
+							<button class="tool-btn secondary" onclick="renameLayer()">
+								<i class="fas fa-pen"></i> Rename Layer
+							</button>
+							<div class="tool-grid">
+								<!-- This empty div was in the original code -->
+							</div>
+						</div>
+						<div id="layer-list" class="layer-list">
+							<!-- Layers will be dynamically added here -->
+						</div>
+						<div class="layer-count">
+							Total Layers: <span id="layer-count">0</span>
+						</div>
+					</div>
+				</div>
 
-      <div class="panel">
-        <h3 class="panel-title">
-          Adjustments <i class="fas fa-chevron-down"></i>
-        </h3>
-        <div class="panel-content">
-          <div class="color-picker">
-            <label>Color:</label>
-            <input type="color" id="colorPicker" onchange="changeColor()" />
-          </div>
-          
-          <div class="slider-container">
-            <label>Opacity:</label>
-            <input type="range" id="opacitySlider" min="0" max="1" step="0.1" value="1" onchange="changeOpacity()" />
-            <span id="opacityValue">100%</span>
-          </div>
-          
-          <div class="slider-container">
-            <label>Brightness:</label>
-            <input type="range" id="brightnessSlider" min="0" max="200" value="100" onchange="adjustBrightness()" />
-            <span id="brightnessValue">100%</span>
-          </div>
-          
-          <div class="slider-container">
-            <label>Contrast:</label>
-            <input type="range" id="contrastSlider" min="0" max="200" value="100" onchange="adjustContrast()" />
-            <span id="contrastValue">100%</span>
-          </div>
-        </div>
-      </div>
+				<div class="panel">
+					<h3 class="panel-title">
+						Image Tools <i class="fas fa-chevron-down"></i>
+					</h3>
+					<div class="panel-content">
+						<div class="control-group">
+							<input
+								type="file"
+								id="imageUpload"
+								accept="image/*"
+								class="form-control"
+							/>
+							<button class="tool-btn" onclick="addImage()">
+								<i class="fas fa-image"></i> Add Image
+							</button>
+						</div>
+						<div class="control-group">
+							<input
+								type="file"
+								id="segmentImageUpload"
+								accept="image/*"
+								class="form-control"
+							/>
+							<button class="tool-btn" onclick="sendImageForSegmentation()">
+								<i class="fas fa-cut"></i> Segment Image
+							</button>
+						</div>
+					</div>
+				</div>
 
-      <div class="panel">
-        <h3 class="panel-title">
-          Arrangement <i class="fas fa-chevron-down"></i>
-        </h3>
-        <div class="panel-content">
-          <div class="tool-grid">
-            <button class="tool-btn secondary" onclick="bringForward()">
-              <i class="fas fa-arrow-up"></i> Forward
-            </button>
-            <button class="tool-btn secondary" onclick="sendBackward()">
-              <i class="fas fa-arrow-down"></i> Backward
-            </button>
-            <button class="tool-btn secondary" onclick="bringToFront()">
-              <i class="fas fa-level-up-alt"></i> To Front
-            </button>
-            <button class="tool-btn secondary" onclick="sendToBack()">
-              <i class="fas fa-level-down-alt"></i> To Back
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+				<!-- Moved relationship panel to sidebar -->
+				<div class="panel relationship-panel">
+					<h3 class="panel-title">
+						Define Relationships <i class="fas fa-chevron-down"></i>
+					</h3>
+					<div class="panel-content relationship-controls">
+						<select id="object1" class="form-select">
+							<option value="">Select Object 1</option>
+						</select>
+						<select id="relationshipType" class="form-select">
+							<option value="connected">Connected to</option>
+							<option value="contains">Contains</option>
+							<option value="partOf">Part of</option>
+						</select>
+						<select id="object2" class="form-select">
+							<option value="">Select Object 2</option>
+						</select>
+						<button class="tool-btn" onclick="addRelationship()">
+							<i class="fas fa-link"></i> Add Relationship
+						</button>
+					</div>
+				</div>
 
-  </div>
+				<div class="panel">
+					<h3 class="panel-title">
+						Adjustments <i class="fas fa-chevron-down"></i>
+					</h3>
+					<div class="panel-content">
+						<div class="color-picker">
+							<label>Color:</label>
+							<input type="color" id="colorPicker" onchange="changeColor()" />
+						</div>
 
-  <script src="{{ url_for('static', filename='create_segmentation.js') }}"></script>
-</body>
+						<div class="slider-container">
+							<label>Opacity:</label>
+							<input
+								type="range"
+								id="opacitySlider"
+								min="0"
+								max="1"
+								step="0.1"
+								value="1"
+								onchange="changeOpacity()"
+							/>
+							<span id="opacityValue">100%</span>
+						</div>
+
+						<div class="slider-container">
+							<label>Brightness:</label>
+							<input
+								type="range"
+								id="brightnessSlider"
+								min="0"
+								max="200"
+								value="100"
+								onchange="adjustBrightness()"
+							/>
+							<span id="brightnessValue">100%</span>
+						</div>
+
+						<div class="slider-container">
+							<label>Contrast:</label>
+							<input
+								type="range"
+								id="contrastSlider"
+								min="0"
+								max="200"
+								value="100"
+								onchange="adjustContrast()"
+							/>
+							<span id="contrastValue">100%</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="panel">
+					<h3 class="panel-title">
+						Arrangement <i class="fas fa-chevron-down"></i>
+					</h3>
+					<div class="panel-content">
+						<div class="tool-grid">
+							<button class="tool-btn secondary" onclick="bringForward()">
+								<i class="fas fa-arrow-up"></i> Forward
+							</button>
+							<button class="tool-btn secondary" onclick="sendBackward()">
+								<i class="fas fa-arrow-down"></i> Backward
+							</button>
+							<button class="tool-btn secondary" onclick="bringToFront()">
+								<i class="fas fa-level-up-alt"></i> To Front
+							</button>
+							<button class="tool-btn secondary" onclick="sendToBack()">
+								<i class="fas fa-level-down-alt"></i> To Back
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="{{ url_for('static', filename='create_segmentation.js') }}"></script>
+	</body>
 </html>

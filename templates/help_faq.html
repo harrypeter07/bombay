@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help/FAQ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='help_faq.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Help & FAQ</h1>
+        
+        <section class="help-section">
+            <h2>Help Topics</h2>
+            <div class="help-item">
+                <button class="help-toggle">+</button>
+                <span>How to register for an account?</span>
+                <div class="help-content">
+                    <p>1. Go to the login page.</p>
+                    <p>2. Click on the 'Register' link.</p>
+                    <p>3. Fill out the registration form and submit.</p>
+                </div>
+            </div>
+            <div class="help-item">
+                <button class="help-toggle">+</button>
+                <span>How to reset your password?</span>
+                <div class="help-content">
+                    <p>1. Click on the 'Forgot Password' link on the login page.</p>
+                    <p>2. Enter your registered email address.</p>
+                    <p>3. Follow the instructions in the password reset email.</p>
+                </div>
+            </div>
+            <div class="help-item">
+                <button class="help-toggle">+</button>
+                <span>How to create a segmentation?</span>
+                <div class="help-content">
+                    <p>1. Go to the 'Create Segmentation' page.</p>
+                    <p>2. Enter your prompt in the input box.</p>
+                    <p>3. Click 'Generate' to create the segmentation.</p>
+                </div>
+            </div>
+            <div class="help-item">
+                <button class="help-toggle">+</button>
+                <span>Understanding the dashboard overview.</span>
+                <div class="help-content">
+                    <p>1. The dashboard provides an overview of your application's key features.</p>
+                    <p>2. Use the navigation menu to access different sections.</p>
+                    <p>3. Check the 'Latest Updates' section for recent changes.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2 class="faq-header">
+                Frequently Asked Questions
+                <button class="faq-toggle">+</button>
+            </h2>
+            <div class="faq-content">
+                <div class="faq-item">
+                    <h3>How do I register for an account?</h3>
+                    <p>You can register by clicking the 'Register' link on the login page and filling in the required details.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What if I forget my password?</h3>
+                    <p>Click on the 'Forgot Password' link on the login page, and follow the instructions to reset your password.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do I create a segmentation?</h3>
+                    <p>Navigate to the 'Create Segmentation' page from the dashboard, enter your prompt, and click 'Generate' to create the segmentation.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do I view the generated JSON?</h3>
+                    <p>After creating a segmentation, you can view the generated JSON on the 'View JSON' page accessible from the dashboard.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Help section: Expand and collapse individual help topics
+        const helpToggles = document.querySelectorAll('.help-toggle');
+        helpToggles.forEach((toggle, index) => {
+            toggle.addEventListener('click', function() {
+                const helpContent = this.nextElementSibling.nextElementSibling;
+                const isOpen = helpContent.style.display === 'block';
+                
+                // Close all help sections
+                document.querySelectorAll('.help-content').forEach(content => content.style.display = 'none');
+                document.querySelectorAll('.help-toggle').forEach(btn => btn.textContent = '+');
+
+                // Toggle the clicked section
+                if (!isOpen) {
+                    helpContent.style.display = 'block';
+                    this.textContent = '-';
+                }
+            });
+        });
+
+        // FAQ section: Expand and collapse FAQ section
+        const faqToggle = document.querySelector('.faq-header');
+        faqToggle.addEventListener('click', function() {
+            const faqContent = document.querySelector('.faq-content');
+            const isOpen = faqContent.style.display === 'block';
+            faqContent.style.display = isOpen ? 'none' : 'block';
+            this.querySelector('.faq-toggle').textContent = isOpen ? '+' : '-';
+        });
+
+        // Hide all help contents and FAQ section initially
+        document.querySelectorAll('.help-content').forEach(content => content.style.display = 'none');
+        document.querySelector('.faq-content').style.display = 'none';
+    </script>
+</body>
+</html>

@@ -1,47 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Dashboard - Auth System</title>
-		<link
-			rel="stylesheet"
-			href="{{ url_for('static', filename='style.css') }}"
-		/>
-	</head>
-	<body>
-		<div class="dashboard">
-			<nav class="dashboard-nav">
-				<h1>Welcome, {{ username }}!</h1>
-				<button id="logoutBtn" class="logout-btn">Logout</button>
-			</nav>
-			<div class="dashboard-content">
-				<div class="welcome-card">
-					<h2>Successfully Authenticated</h2>
-					<p>You are now logged into your secure dashboard.</p>
-					<a
-						href="{{ url_for('create_segmentation') }}"
-						class="segmentation-btn"
-						>Create Segmentation</a
-					>
+{% extends "base.html" %}
+{% block title %}Dashboard - Auth System{% endblock %}
+{% block content %}
+			<div class="dashboard-layout">
+				<div class="left-content">
+					<section class="info">
+						<h2>Latest Updates</h2>
+						<p>
+							Here you can find the latest updates and important information
+							about your application.
+						</p>
+					</section>
+					<section class="overview">
+						<h2>Application Overview</h2>
+						<div class="card">
+							<h3>Feature 1</h3>
+							<p>Description of Feature 1.</p>
+						</div>
+						<div class="card">
+							<h3>Feature 2</h3>
+							<p>Description of Feature 2.</p>
+						</div>
+						<div class="card">
+							<h3>Feature 3</h3>
+							<p>Description of Feature 3.</p>
+						</div>
+					</section>
 				</div>
-				<style>
-					.segmentation-btn {
-						display: inline-block;
-						padding: 10px 20px;
-						background-color: #0d6efd;
-						color: white;
-						text-decoration: none;
-						border-radius: 5px;
-						margin-top: 20px;
-						transition: background-color 0.3s;
-					}
-					.segmentation-btn:hover {
-						background-color: #0b5ed7;
-					}
-				</style>
+				<div class="right-content">
+					<div class="welcome-card">
+						<h2>Successfully Authenticated</h2>
+						<p>You are now logged into your secure dashboard.</p>
+						<a
+							href="{{ url_for('create_segmentation') }}"
+							class="segmentation-btn"
+							>Create Segmentation</a
+						>
+					</div>
+				</div>
 			</div>
-		</div>
+{% endblock %}
 		<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
 	</body>
 </html>
