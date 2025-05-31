@@ -170,7 +170,7 @@ canvas {
 	font-weight: 600;
 	margin: 0 0 15px 0;
 	font-size: 1.1rem;
-	color: var(--accent-color);
+	color: #ff9800;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
