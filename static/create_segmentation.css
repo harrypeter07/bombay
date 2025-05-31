@@ -70,7 +70,7 @@ body {
 
 /* FIX: Canvas container to take full width and proper aspect ratio */
 .canvas-container {
-	border: 2px solid var(--canvas-border);
+	border: 2.5px solid #1976d2;
 	border-radius: 8px;
 	background-color: var(--bg-secondary);
 	margin-bottom: 20px;
