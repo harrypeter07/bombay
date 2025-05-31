@@ -781,7 +781,7 @@ button.tool-btn[onclick="generateJSON"] {
 .user-avatar {
 	width: 40px;
 	height: 40px;
-	background-color: var(--accent-orange);
+	background-color: #ff9800;
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
