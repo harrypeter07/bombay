@@ -530,7 +530,7 @@ button.tool-btn[onclick="generateJSON"] {
 /* Enhanced AI Image Generation Section */
 .ai-generation-section {
 	margin-top: 20px;
-	background-color: var(--bg-secondary);
+	background-color: #fffde7;
 	padding: 20px;
 	border-radius: 8px;
 	box-shadow: var(--box-shadow);
