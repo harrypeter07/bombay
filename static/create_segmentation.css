@@ -261,7 +261,7 @@ canvas {
 	align-items: center;
 	padding: 8px;
 	margin-bottom: 8px;
-	background-color: var(--panel-bg);
+	background-color: #f0f7fa;
 	border: 1px solid var(--border-color);
 	border-radius: 6px;
 	cursor: move;
