@@ -1073,3 +1073,8 @@ button.tool-btn[onclick="generateJSON"] {
 	min-width: 200px;
 	text-align: center;
 }
+
+.blend-controls {
+	background-color: #e0f7fa;
+	/* ...rest of existing styles... */
+}
