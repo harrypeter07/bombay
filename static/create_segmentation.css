@@ -762,8 +762,8 @@ button.tool-btn[onclick="generateJSON"] {
 	justify-content: space-between;
 	align-items: center;
 	padding: 10px 20px;
-	background-color: var(--primary-green);
-	color: var(--light-gray);
+	background-color: #1a237e;
+	color: white;
 }
 
 .header-content {
