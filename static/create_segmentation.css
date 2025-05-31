@@ -156,10 +156,10 @@ canvas {
 
 /* Panel styling */
 .panel {
+	background-color: #fff;
 	border-bottom: 1px solid var(--border-color);
 	padding: 15px;
 	transition: all 0.3s ease;
-	background-color: var(--panel-bg);
 }
 
 .panel:hover {
