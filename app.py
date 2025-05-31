@@ -1,32 +1,49 @@
+import os
+import json
+import base64
+import requests
 from flask import Flask, request, jsonify, session, render_template, redirect, url_for
 from pymongo import MongoClient
 import bcrypt
 from dotenv import load_dotenv
-import os
 import logging
 from datetime import timedelta
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_cors import CORS
+from PIL import Image
+import numpy as np
+from io import BytesIO
+# import torch
+# import cv2
+# from mobile_sam import sam_model_registry, SamPredictor
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)  # Changed to DEBUG level
 logger = logging.getLogger(__name__)
+
+logger.debug("Starting application initialization...")
 
 # Load environment variables
 load_dotenv()
+logger.debug("Environment variables loaded")
 
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app)
+logger.debug("Flask app initialized")
 
 # Configure session
 app.secret_key = os.getenv('SESSION_SECRET')
+if not app.secret_key:
+    logger.error("SESSION_SECRET not set in environment variables!")
+    raise ValueError("SESSION_SECRET not set in environment variables!")
+
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-
-if not app.secret_key:
-    raise ValueError("SESSION_SECRET not set in environment variables!")
+logger.debug("Session configuration completed")
 
 # Configure rate limiter
 limiter = Limiter(
@@ -34,10 +51,12 @@ limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["200 per day", "50 per hour"]
 )
+logger.debug("Rate limiter configured")
 
-# MongoDB Connection with connection pooling
+# MongoDB Connection
 MONGODB_URI = os.getenv('MONGODB_URI')
 if not MONGODB_URI:
+    logger.error("MONGODB_URI not set in environment variables!")
     raise ValueError("MONGODB_URI not set in environment variables!")
 
 try:
@@ -48,6 +67,13 @@ try:
 except Exception as e:
     logger.error(f"Failed to connect to MongoDB: {e}")
     raise
+
+# Hugging Face API
+HUGGING_FACE_API_KEY = os.getenv('HUGGING_FACE_API_KEY')
+HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2"
+headers = {
+    "Authorization": f"Bearer {HUGGING_FACE_API_KEY}"
+}
 
 # Password Hashing Functions
 def hash_password(password):
@@ -72,25 +98,48 @@ def validate_registration_input(data):
                                   data.get('email', ''), data.get('password', '')]):
         return False, "Empty fields not allowed"
     if len(data.get('password', '')) < 8:
-        return False, "Password must be at least 8 characters"
+        return False, "Password must be at least 8 pjesama8 characters"
     return True, ""
+
+# SAM Model Initialization
+def download_model():
+    # logger.info("Downloading SAM model...")
+    # sam_checkpoint = "mobile_sam.pt"
+    # if not os.path.exists(sam_checkpoint):
+    #     url = "https://raw.githubusercontent.com/ChaoningZhang/MobileSAM/master/weights/mobile_sam.pt"
+    #     response = requests.get(url)
+    #     with open(sam_checkpoint, 'wb') as f:
+    #         f.write(response.content)
+    #     logger.info("SAM model downloaded successfully")
+    # return sam_checkpoint
+    pass
+
+def initialize_model():
+    # logger.info("Initializing SAM model...")
+    # model_type = "vit_t"
+    # sam_checkpoint = download_model()
+    # device = torch.device('cpu')
+    # logger.info(f"Using device: {device}")
+    # sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
+    # sam.to(device=device)
+    # predictor = SamPredictor(sam)
+    # logger.info("SAM model initialized successfully")
+    # return predictor
+    pass
+
+# predictor = initialize_model()
 
 # Routes
 @app.route('/')
 def home():
     try:
         if 'user' in session:
-            return render_template('dashboard.html', username=session['user'])
+            user = users.find_one({'username': session['user']})
+            return render_template('dashboard.html', username=session['user'], name=user.get('name', session['user']))
         return render_template('login.html')
     except Exception as e:
         logger.error(f"Error in home route: {e}")
         return "Error loading page", 500
-
-@app.route('/register')
-def register_page():
-    if 'user' in session:
-        return render_template('dashboard.html', username=session['user'])
-    return redirect(url_for('home') + '?register=true')
 
 @app.route('/api/register', methods=['POST'])
 @limiter.limit("5 per minute")
@@ -156,19 +205,13 @@ def login():
         logger.error(f"Login error: {e}")
         return jsonify({'error': 'Login failed'}), 500
 
-@app.route('/dashboard')
-def dashboard():
-    if 'user' not in session:
-        return redirect(url_for('home'))
-    return render_template('dashboard.html', username=session['user'])
-
 @app.route('/api/logout', methods=['POST'])
 def logout():
     session.clear()
     return jsonify({'message': 'Logout successful'})
 
-@app.route('/create-segmentation')
-def create_segmentation():
+@app.route('/dashboard')
+def dashboard():
     if 'user' not in session:
         return redirect(url_for('home'))
     try:
@@ -176,10 +219,9 @@ def create_segmentation():
         if not user:
             session.clear()
             return redirect(url_for('home'))
-        user_name = user.get('name', session['user'])
-        return render_template('create_segmentation.html', username=session['user'], name=user_name)
+        return render_template('dashboard.html', username=session['user'], name=user.get('name', session['user']))
     except Exception as e:
-        logger.error(f"Error in create_segmentation route: {e}")
+        logger.error(f"Error in dashboard route: {e}")
         return "Error loading page", 500
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
@@ -197,7 +239,66 @@ def forgot_password():
 def help_faq():
     if 'user' not in session:
         return redirect(url_for('home'))
-    return render_template('help_faq.html', username=session['user'])
+    try:
+        user = users.find_one({'username': session['user']})
+        if not user:
+            session.clear()
+            return redirect(url_for('home'))
+        return render_template('help_faq.html', username=session['user'], name=user.get('name', session['user']))
+    except Exception as e:
+        logger.error(f"Error in help_faq route: {e}")
+        return "Error loading page", 500
+
+@app.route('/create-segmentation')
+def create_segmentation():
+    if 'user' not in session:
+        return redirect(url_for('home'))
+    try:
+        user = users.find_one({'username': session['user']})
+        if not user:
+            session.clear()
+            return redirect(url_for('home'))
+        user_name = user.get('name', session['user'])
+        return render_template('create_segmentation.html', username=session['user'], name=user_name)
+    except Exception as e:
+        logger.error(f"Error in create_segmentation route: {e}")
+        return "Error loading page", 500
+
+@app.route('/segment', methods=['POST'])
+def segment():
+    return jsonify({"error": "Segmentation functionality is disabled for testing."}), 501
+
+@app.route('/generate-image', methods=['POST'])
+def generate_image():
+    try:
+        prompt = request.form.get('prompt')
+        if not prompt:
+            return jsonify({"error": "No prompt provided"}), 400
+
+        response = requests.post(
+            HUGGING_FACE_API_URL,
+            headers=headers,
+            json={"inputs": prompt}
+        )
+
+        if response.status_code != 200:
+            return jsonify({"error": "Failed to generate image"}), response.status_code
+
+        image_bytes = response.content
+        image = Image.open(BytesIO(image_bytes))
+        
+        buffered = BytesIO()
+        image.save(buffered, format="PNG")
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+        
+        return jsonify({"image_url": f"data:image/png;base64,{img_str}"})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/hover_segment', methods=['POST'])
+def hover_segment():
+    return jsonify({"error": "Hover segmentation functionality is disabled for testing."}), 501
 
 @app.route('/test')
 def test():

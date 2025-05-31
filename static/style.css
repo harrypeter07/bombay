@@ -7,7 +7,7 @@
 }
 
 :root {
-	--primary-color: #3f7d58;
+	--primary-color: #ffffff;
 	--secondary-color: #ec5228;
 	--background-color: #efefef;
 	--accent-color: #ef9651;
@@ -29,12 +29,15 @@ body {
 	position: relative;
 	max-width: 850px;
 	width: 100%;
-	background: var(--background-color);
+	background: white;
 	padding: var(--padding-large);
-	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 	perspective: 2700px;
 	border-radius: var(--border-radius);
 	margin: var(--padding-medium);
+	border: 2px solid #1e7cbd;
+
+	/* border: 5px solid white; */
 }
 .container .cover {
 	position: absolute;
@@ -61,7 +64,7 @@ body {
 	left: 0;
 	height: 100%;
 	width: 100%;
-	background-color: #fff2db;
+	background-color: white;
 }
 .cover .back {
 	transform: rotateY(180deg);
@@ -75,7 +78,7 @@ body {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	background-color: #fff2db;
+	background-color: #18eaee;
 }
 .container .cover .text::before {
 	content: "";
@@ -83,14 +86,14 @@ body {
 	height: 100%;
 	width: 100%;
 	opacity: 0.5;
-	background: var(--accent-color);
+	background: #240d8b;
 }
 .cover .text .text-1,
 .cover .text .text-2 {
 	z-index: 20;
 	font-size: 32px;
 	font-weight: 600;
-	color: var(--secondary-color);
+	color: white;
 	text-align: center;
 	padding: var(--padding-small);
 }
@@ -101,8 +104,9 @@ body {
 .container .forms {
 	height: 100%;
 	width: 100%;
-	background: #fff2db;
+	background: white;
 }
+
 .container .form-content {
 	display: flex;
 	align-items: center;
@@ -178,7 +182,7 @@ body {
 }
 .forms .form-content .button input {
 	color: var(--background-color);
-	background: var(--accent-color);
+	background:#216ed2 ;
 	border: none;
 	padding: var(--padding-small);
 	cursor: pointer;
@@ -186,13 +190,17 @@ body {
 	border-radius: var(--border-radius);
 	font-size: 18px;
 	font-weight: 500;
+	margin: auto;
+	padding: auto;
 }
 .forms .form-content .button input:hover {
 	background: var(--secondary-color);
 }
 .forms .form-content label {
-	color: var(--primary-color);
+	color: green;
 	cursor: pointer;
+	margin: auto;
+
 }
 .forms .form-content label:hover {
 	text-decoration: underline;
