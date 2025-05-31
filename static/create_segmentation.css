@@ -97,7 +97,7 @@ canvas {
 /* Sidebar */
 .sidebar {
 	grid-area: sidebar;
-	background-color: var(--panel-bg);
+	background-color: #e3f2fd;
 	overflow-y: auto;
 	box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 	border-right: 1px solid var(--border-color);
