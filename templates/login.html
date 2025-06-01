@@ -8,6 +8,7 @@
 			rel="stylesheet"
 			href="{{ url_for('static', filename='style.css') }}"
 		/>
+<<<<<<< HEAD
 
         <style>
             /* Modern Login/Signup Styling */
@@ -397,5 +398,134 @@
     </div>
     
 		<script src="{{ url_for('static', filename='script.js') }}"></script>
+=======
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+		/>
+
+		<style>
+			.front {
+				background-color : blue;
+			}
+			.text-1 {
+				color:white;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<input type="checkbox" id="flip" />
+			<div class="cover">
+				<div class="front">
+					<div class="text">
+						<span class="text-1">Every new friend is a<br />new adventure</span>
+						<span class="text-2">Let's get connected</span>
+					</div>
+				</div>
+				<div class="back">
+					<div class="text">
+						<span class="text-1"
+							>Complete miles of journey<br />with one step</span
+						>
+						<span class="text-2">Let's get started</span>
+					</div>
+				</div>
+			</div>
+			<div class="forms">
+				<div class="form-content">
+					<div class="login-form">
+						<div class="title">Login</div>
+						<form id="loginForm">
+							<div class="input-boxes">
+								<div class="input-box">
+									<i class="fas fa-user"></i>
+									<input
+										type="text"
+										id="loginUsername"
+										name="username"
+										placeholder="Enter your username"
+										required
+									/>
+								</div>
+								<div class="input-box">
+									<i class="fas fa-lock"></i>
+									<input
+										type="password"
+										id="loginPassword"
+										name="password"
+										placeholder="Enter your password"
+										required
+									/>
+								</div>
+								<div class="button input-box">
+									<input type="submit" value="Login" />
+								</div>
+								<div class="text sign-up-text">
+									Don't have an account? <label for="flip">Signup now</label>
+								</div>
+							</div>
+							<p class="error-message" id="loginError"></p>
+						</form>
+					</div>
+					<div class="signup-form">
+						<div class="title">Signup</div>
+						<form id="registerForm">
+							<div class="input-boxes">
+								<div class="input-box">
+									<i class="fas fa-id-card"></i>
+									<input
+										type="text"
+										id="registerName"
+										name="name"
+										placeholder="Enter your full name"
+										required
+									/>
+								</div>
+								<div class="input-box">
+									<i class="fas fa-user"></i>
+									<input
+										type="text"
+										id="registerUsername"
+										name="username"
+										placeholder="Enter your username"
+										required
+									/>
+								</div>
+								<div class="input-box">
+									<i class="fas fa-envelope"></i>
+									<input
+										type="email"
+										id="registerEmail"
+										name="email"
+										placeholder="Enter your email"
+										required
+									/>
+								</div>
+								<div class="input-box">
+									<i class="fas fa-lock"></i>
+									<input
+										type="password"
+										id="registerPassword"
+										name="password"
+										placeholder="Enter your password"
+										required
+									/>
+								</div>
+								<div class="button input-box">
+									<input type="submit" value="Register" />
+								</div>
+								<div class="text sign-up-text">
+									Already have an account? <label for="flip">Login now</label>
+								</div>
+							</div>
+							<p class="error-message" id="registerError"></p>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="{{ url_for('static', filename='register.js') }}"></script>
+>>>>>>> hassan
 	</body>
 </html>

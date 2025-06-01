@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{% block title %}Vyakhya Tool{% endblock %}</title>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='dashboard.css') }}"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+		/>
+		{% block extra_css %}
+		<style>
+			/* Add your custom styles here */
+
+	
+		</style>
+		{% endblock %}
+	</head>
+	<body>
+		<div class="container">
+			<nav class="dashboard-nav">
+				<div class="header-content">
+					<div class="user-info">
+						<div class="user-avatar" id="userInitials">JS</div>
+						<div class="user-details">
+							<div class="user-name" id="userName">{{username}}</div>
+							<div class="user-welcome">Welcome back!</div>
+						</div>
+						<div class="user-credits" id="userCredits">
+							<i class="fas fa-coins"></i>
+							<span id="creditsAmount">750</span> credits
+						</div>
+					</div>
+					<div class="theme-toggle" onclick="toggleTheme()">
+						<i class="fas fa-moon"></i>
+						<span>Dark Mode</span>
+					</div>
+				</div>
+				<ul class="nav-links" id="navLinkss">
+					<li>
+						<a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a>
+					</li>
+					<li>
+						<a href="{{ url_for('create_segmentation') }}"
+							><i class="fas fa-layer-group"></i> Create Segmentation</a
+						>
+					</li>
+					<li>
+						<a href="#"><i class="fas fa-code"></i> View JSON</a>
+					</li>
+					<li>
+						<a href="#"><i class="fas fa-cog"></i> Settings</a>
+					</li>
+					<li>
+						<a href="{{ url_for('help_faq') }}"
+							><i class="fas fa-question-circle"></i> Help/FAQ</a
+						>
+					</li>
+					<li>
+						<a
+							href="{{ url_for('forgot_password') }}"
+							class="forgot-password-btn"
+							><i class="fas fa-key"></i> Reset Password</a
+						>
+					</li>
+					<li>
+						<a href="{{ url_for('login') }}" id="logoutBtn" class="logout-btn"
+							><i class="fas fa-sign-out-alt"></i> Logout</a
+						>
+					</li>
+				</ul>
+			</nav>
+			{% block content %}{% endblock %}
+		</div>
+		{% block extra_js %}{% endblock %}
+	</body>
+</html>
