@@ -86,3 +86,7 @@ Contributions are welcome! To contribute:
 4. Push to your fork and open a pull request
 
 Please follow the existing code style and add clear commit messages.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
