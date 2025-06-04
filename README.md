@@ -11,3 +11,11 @@ A web application for advanced image segmentation and AI-powered image generatio
 - Canvas editing and blending
 - JSON export of canvas state
 - Responsive, modern UI
+
+## Tech Stack
+
+- Python (Flask)
+- JavaScript (ES6, Fabric.js)
+- HTML5 & CSS3
+- MongoDB
+- Stable Diffusion API (Stability AI)
