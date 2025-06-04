@@ -90,3 +90,11 @@ Please follow the existing code style and add clear commit messages.
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+- [Fabric.js](http://fabricjs.com/) for canvas manipulation
+- [Flask](https://flask.palletsprojects.com/) for the backend framework
+- [Stability AI](https://platform.stability.ai/) for the Stable Diffusion API
+- [MongoDB](https://www.mongodb.com/) for the database
+- [Font Awesome](https://fontawesome.com/) for icons
