@@ -75,3 +75,14 @@ HUGGING_FACE_API_KEY=your_huggingface_api_key  # (if using Hugging Face)
 ├── README.md               # Project documentation
 └── ...
 ```
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a new branch for your feature or bugfix
+3. Make your changes and commit them
+4. Push to your fork and open a pull request
+
+Please follow the existing code style and add clear commit messages.
