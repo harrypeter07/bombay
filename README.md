@@ -37,3 +37,15 @@ A web application for advanced image segmentation and AI-powered image generatio
    python app.py
    ```
 5. Open your browser and go to `http://localhost:5000`.
+
+## Environment Variables
+
+Create a `.env` file in the project root with the following variables:
+
+```
+SESSION_SECRET=your_secret_key
+MONGODB_URI=your_mongodb_connection_string
+HUGGING_FACE_API_KEY=your_huggingface_api_key  # (if using Hugging Face)
+```
+
+- For Stable Diffusion, you will need one or more Stability AI API keys (used directly in the code).
