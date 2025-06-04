@@ -49,3 +49,12 @@ HUGGING_FACE_API_KEY=your_huggingface_api_key  # (if using Hugging Face)
 ```
 
 - For Stable Diffusion, you will need one or more Stability AI API keys (used directly in the code).
+
+## Usage
+
+1. Register a new account or log in with your credentials.
+2. Use the AI Image Generation panel to generate images from text prompts.
+3. Upload images or use generated images for segmentation.
+4. Add, remove, and reorder layers using the sidebar.
+5. Use segmentation tools to mark and segment objects in images.
+6. Export your canvas as JSON for further use.
