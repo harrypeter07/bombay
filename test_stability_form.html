@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Stability AI SD3 Image Generator</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 40px;
+			}
+			form {
+				margin-bottom: 20px;
+			}
+			input[type="text"] {
+				width: 400px;
+				padding: 8px;
+			}
+			button {
+				padding: 8px 16px;
+			}
+			#result {
+				margin-top: 20px;
+			}
+			img {
+				max-width: 600px;
+				border: 1px solid #ccc;
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Stability AI SD3 Image Generator</h1>
+		<form id="imageForm">
+			<input
+				type="text"
+				id="prompt"
+				name="prompt"
+				placeholder="Enter your prompt here"
+				required
+			/>
+			<button type="submit">Generate Image</button>
+		</form>
+		<div id="result"></div>
+		<script>
+			document
+				.getElementById("imageForm")
+				.addEventListener("submit", async function (e) {
+					e.preventDefault();
+					const prompt = document.getElementById("prompt").value;
+					document.getElementById("result").innerHTML = "Generating...";
+					const response = await fetch("/generate-stability-image", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({ prompt }),
+					});
+					if (response.ok) {
+						const data = await response.json();
+						document.getElementById(
+							"result"
+						).innerHTML = `<img src="data:image/jpeg;base64,${data.image}" alt="Generated Image">`;
+					} else {
+						const err = await response.text();
+						document.getElementById(
+							"result"
+						).innerHTML = `<span style='color:red;'>Error: ${err}</span>`;
+					}
+				});
+		</script>
+	</body>
+</html>

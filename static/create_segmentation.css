@@ -70,7 +70,7 @@ body {
 
 /* FIX: Canvas container to take full width and proper aspect ratio */
 .canvas-container {
-	border: 2.5px solid #1976d2;
+	border: 2px solid var(--canvas-border);
 	border-radius: 8px;
 	background-color: var(--bg-secondary);
 	margin-bottom: 20px;
@@ -79,8 +79,7 @@ body {
 	box-shadow: var(--box-shadow);
 	width: 100%;
 	height: 60vh; /* Larger canvas */
-	/* min-width: 1220px;
-	min-height: 460px; */
+	
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -93,17 +92,21 @@ canvas {
 	height: 100% !important; /* Force 100% height */
 	object-fit: contain;
 }
-
+.canvas {
+	height: 100%;
+	width: 100%;
+}
 /* Sidebar */
 .sidebar {
 	grid-area: sidebar;
-	background-color: #e3f2fd;
+	background-color: var(--panel-bg);
 	overflow-y: auto;
 	box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 	border-right: 1px solid var(--border-color);
 	display: flex;
 	flex-direction: column;
 }
+
 
 /* Header with theme toggle */
 /* Updated Editor Header */
@@ -156,10 +159,10 @@ canvas {
 
 /* Panel styling */
 .panel {
-	background-color: #fff;
 	border-bottom: 1px solid var(--border-color);
 	padding: 15px;
 	transition: all 0.3s ease;
+	background-color: var(--panel-bg);
 }
 
 .panel:hover {
@@ -170,7 +173,7 @@ canvas {
 	font-weight: 600;
 	margin: 0 0 15px 0;
 	font-size: 1.1rem;
-	color: #ff9800;
+	color: var(--accent-color);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -190,13 +193,13 @@ canvas {
 
 /* Tool buttons */
 .tool-btn {
-	background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
-	color: #222;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	width: 100%;
 	padding: 10px 12px;
+	background: var(--gradient-primary);
+	color: white;
 	border: none;
 	border-radius: 6px;
 	cursor: pointer;
@@ -261,7 +264,7 @@ canvas {
 	align-items: center;
 	padding: 8px;
 	margin-bottom: 8px;
-	background-color: #f0f7fa;
+	background-color: var(--panel-bg);
 	border: 1px solid var(--border-color);
 	border-radius: 6px;
 	cursor: move;
@@ -530,7 +533,7 @@ button.tool-btn[onclick="generateJSON"] {
 /* Enhanced AI Image Generation Section */
 .ai-generation-section {
 	margin-top: 20px;
-	background-color: #fffde7;
+	background-color: var(--bg-secondary);
 	padding: 20px;
 	border-radius: 8px;
 	box-shadow: var(--box-shadow);
@@ -762,8 +765,8 @@ button.tool-btn[onclick="generateJSON"] {
 	justify-content: space-between;
 	align-items: center;
 	padding: 10px 20px;
-	background-color: #1a237e;
-	color: white;
+	background-color: var(--primary-green);
+	color: var(--light-gray);
 }
 
 .header-content {
@@ -781,7 +784,7 @@ button.tool-btn[onclick="generateJSON"] {
 .user-avatar {
 	width: 40px;
 	height: 40px;
-	background-color: #ff9800;
+	background-color: var(--accent-orange);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
@@ -1072,9 +1075,4 @@ button.tool-btn[onclick="generateJSON"] {
 	pointer-events: none;
 	min-width: 200px;
 	text-align: center;
-}
-
-.blend-controls {
-	background-color: #e0f7fa;
-	/* ...rest of existing styles... */
 }
