@@ -58,3 +58,20 @@ HUGGING_FACE_API_KEY=your_huggingface_api_key  # (if using Hugging Face)
 4. Add, remove, and reorder layers using the sidebar.
 5. Use segmentation tools to mark and segment objects in images.
 6. Export your canvas as JSON for further use.
+
+## Project Structure
+
+```
+├── app.py                  # Main Flask backend
+├── requirements.txt        # Python dependencies
+├── static/                 # Static files (JS, CSS, images)
+│   ├── create_segmentation.js
+│   ├── create_segmentation.css
+│   └── ...
+├── templates/              # HTML templates (Jinja2)
+│   ├── create_segmentation.html
+│   ├── dashboard.html
+│   └── ...
+├── README.md               # Project documentation
+└── ...
+```
